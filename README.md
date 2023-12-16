@@ -57,6 +57,9 @@ env = MinecraftHardHarvestEnv(image_size=(160,256), **task_conf)
 
 	\-\-save-gif: set to 1 to save testing videos.
 
+- Example:
+	`python test.py --task get_furnace_nearby_with_logs --save-path ./my_output/ --test-episode 30 --save-gif 1 --clip-model-path ./mineclip_official/attn.pth`
+
 ## Citation
 ```bibtex
 @article{yuan2023plan4mc,
