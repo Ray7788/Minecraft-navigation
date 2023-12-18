@@ -10,10 +10,22 @@ import torch
 from torch import nn
 
 class QuickGELU(nn.Module):
+    """
+    (Gaussian Error Linear Unit)
+    Use Sigmoid instead of tangh
+    """
     def forward(self, x: torch.Tensor):
         return x * torch.sigmoid(1.702 * x)
 
 class ResidualAttentionBlock(nn.Module):
+    """
+    Initializes the ResidualAttentionBlock.
+
+    Args:
+        d_model (int): Dimensionality of the input features.
+        n_head (int): Number of attention heads.
+        attn_mask (torch.Tensor, optional): Attention mask for masking certain positions in attention computation.
+    """
     def __init__(self, d_model: int, n_head: int, attn_mask: torch.Tensor = None):
         super().__init__()
 
@@ -32,6 +44,7 @@ class ResidualAttentionBlock(nn.Module):
         self.attn_mask = attn_mask
 
     def attention(self, x: torch.Tensor):
+        # Convert attn_mask to the same dtype and device as input tensor
         self.attn_mask = (
             self.attn_mask.to(dtype=x.dtype, device=x.device)
             if self.attn_mask is not None
@@ -40,6 +53,15 @@ class ResidualAttentionBlock(nn.Module):
         return self.attn(x, x, x, need_weights=False, attn_mask=self.attn_mask)[0]
 
     def forward(self, x: torch.Tensor):
+        """
+        Forward pass of the ResidualAttentionBlock.
+
+        Args:
+            x (torch.Tensor): Input tensor.
+
+        Returns:
+            torch.Tensor: Output tensor after processing through the attention block.
+        """
         x = x + self.attention(self.ln_1(x))
         x = x + self.mlp(self.ln_2(x))
         return x

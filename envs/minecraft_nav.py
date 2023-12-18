@@ -15,9 +15,12 @@ def preprocess_obs(obs, device):
     Preprocessing includes, for example, use MineCLIP to extract image feature and prompt feature,
     flatten and embed voxel names, mask unused obs, etc.
     """
-    B = 1
+    B = 1   # prompt related
 
     def cvt_voxels(vox):
+        """
+        该函数用于将三维体素数据映射为长为27的一维数组。具体映射方式是使用了 VOXEL_BLOCK_NAME_MAP，将每个体素的值映射为相应的名称。
+        """
         ret = np.zeros(3*3*3, dtype=np.long)
         for i, v in enumerate(vox.reshape(3*3*3)):
             if v in VOXEL_BLOCK_NAME_MAP:
@@ -27,6 +30,10 @@ def preprocess_obs(obs, device):
     # I consider the move and functional action only, because the camera space is too large?
     # construct a 3*3*4*3 action embedding
     def cvt_action(act):
+        """
+        this function is used to map action data to an integer. 
+        The mapping method involves different elements in the action and ultimately generates an integer representing the action.
+        """
         if act[5]<=1:
             return act[0] + 3*act[1] + 9*act[2] + 36*act[5]
         elif act[5]==3:
@@ -53,9 +60,10 @@ def preprocess_obs(obs, device):
         # this is actually the image embedding, not prompt embedding (for single task)
         "goal": torch.as_tensor(obs["goal_emb"], dtype=torch.float, device=device).view(B, 6), 
     }
-    #print(obs_["prev_action"])
-    #print(obs_["compass"], yaw_, pitch_)
-    #print(obs_["goal"])
+    # print("goal")
+    # print(obs_["prev_action"]) # Integer
+    # print(obs_["compass"], yaw_, pitch_) # tensor([[ 0.8660, -0.5000,  0.5000,  0.8660]]) [5.7595863] [1.0471976]
+    # print(obs_["goal"]) # tensor([[ 0.0000,  1.0000,  1.0000,  0.0000, -4.7456, -0.4660]])
 
     #print(Batch(obs=obs_))
     return Batch(obs=obs_)

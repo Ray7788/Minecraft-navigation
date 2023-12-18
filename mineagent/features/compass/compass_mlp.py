@@ -4,7 +4,7 @@ import torch.nn as nn
 from mineclip.utils import build_mlp
 import mineclip.utils as U
 
-
+# reference for conf.yml
 class CompassMLP(nn.Module):
     def __init__(
         self,
