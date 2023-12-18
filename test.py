@@ -60,7 +60,7 @@ def main(args):
     if args.shorter_episode:
         task_conf['max_steps'] = task_conf['max_steps']//2
 
-    print('task configs', task_conf)
+    # print('task configs', task_conf)
     # Instantiate environment
     env = MinecraftHardHarvestEnv(
         image_size=(160,256),
