@@ -25,11 +25,13 @@ class ActorCriticModel(nn.Module):
             self.conv1 = nn.Conv2d(observation_space.shape[0], 32, 8, 4,)
             self.conv2 = nn.Conv2d(32, 64, 4, 2, 0)
             self.conv3 = nn.Conv2d(64, 64, 3, 1, 0)
+            # 使用正交初始化方法初始化卷积层的权重
             nn.init.orthogonal_(self.conv1.weight, np.sqrt(2))
             nn.init.orthogonal_(self.conv2.weight, np.sqrt(2))
             nn.init.orthogonal_(self.conv3.weight, np.sqrt(2))
             # Compute output size of convolutional layers
             self.conv_out_size = self.get_conv_output(observation_space.shape)
+            # 设置下一层的输入特征数量为卷积层的输出大小。
             in_features_next_layer = self.conv_out_size
         else:
             # Case: vector observation is available
@@ -48,6 +50,7 @@ class ActorCriticModel(nn.Module):
                 nn.init.orthogonal_(param, np.sqrt(2))
         
         # Hidden layer
+        # 将循环层的隐藏状态映射到隐藏层
         self.lin_hidden = nn.Linear(self.recurrence["hidden_state_size"], self.hidden_size)
         nn.init.orthogonal_(self.lin_hidden.weight, np.sqrt(2))
 

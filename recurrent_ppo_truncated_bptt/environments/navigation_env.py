@@ -12,27 +12,30 @@ import torch
 
 def naive_policy(obs):
     goal_emb = obs['goal_emb']
-    yaw = goal_emb[2:4]
-    dr = goal_emb[4:6]
-    dr = np.array([dr[1], -dr[0]])
-    dr /= np.linalg.norm(dr)
+    yaw = goal_emb[2:4] # 偏航角
+    dr = goal_emb[4:6]  # 位移向量
+    dr = np.array([dr[1], -dr[0]])  # Rotate the displacement vector 90 degrees 
+    dr /= np.linalg.norm(dr)    # 位移向量归一化，使其成为单位向量
 
     act = [0,0,0,12,12,0,0,0]
-    # correct the pitch direction
+    # correct the pitch direction 俯仰角
     pitch = obs["location_stats"]["pitch"]
+    # 根据俯仰角的大小来调整动作数组的第四个元素，即 pitch 方向的动作。
     if pitch>20:
         act[3] = 10
         return act
     elif pitch<-20:
         act[3] = 14
         return act
+    # 根据目标方向和偏航角的夹角来决定前进或跳跃的动作。如果夹角大于等于 20 度的余弦值，就进行前进或跳跃的动作。
     # the direction is correct: forward or jump
     if np.dot(dr, yaw)>=np.cos(np.deg2rad(20)):
-        if np.random.rand()<0.8:
+        if np.random.rand()<0.2:
             act[0] = 1
         else:
             act[2] = 1
         return act
+    # 如果方向不正确，根据 yaw 和 dr 的关系来调整动作数组的第五个元素，即偏航方向的动作
     # should turn left
     if yaw[1]*dr[0]>=yaw[0]*dr[1]:
         act[4] = 10
@@ -239,30 +242,33 @@ class MinecraftNav:
 
     # test and deploy mode: after find the target, reach it with goal-based policy
     def reach(self, target, info, max_dis=3, max_steps=200):
-        assert ('dis' in info)
-        assert (self.usage == 'test' or self.usage == 'deploy')
+        assert ('dis' in info)  # 断言确保信息中包含与目标的距离信息
+        assert (self.usage == 'test' or self.usage == 'deploy') # 断言确保使用模式为测试或部署。
         dis, yaw = info['dis'], info['yaw']
         yaw = np.deg2rad(yaw)
-        self.env.set_goal(self.obs_env['location_stats']['pos'], [np.cos(yaw), np.sin(yaw)])
+        self.env.set_goal(self.obs_env['location_stats']['pos'], [np.cos(yaw), np.sin(yaw)])    # : 使用环境的 set_goal 方法设置目标位置，该位置是智能体当前位置的一个相对方向，以当前方向为基准
 
         success = False
         step_cnt = 0
         for i in range(max_steps):
-            self.env.add_goal_to_obs(self.obs_env)
+            self.env.add_goal_to_obs(self.obs_env)  #  将目标信息添加到当前观察中，以便低层策略能够感知目标信息
             #print(i,'goalpos {}, pos {}'.format(self.env.goal_pos, self.obs_env['location_stats']['pos']))
             a_env = naive_policy(self.obs_env) #self.low_level_policy(self.obs_env)
             next_o, r, done, _ = self.env.step(a_env)
-            self.obs_env = next_o
+            self.obs_env = next_o   # 将当前观察更新为下一个观察
 
+            # 如果智能体的生命值为0或者在部署模式下任务完成，结束循环
             if next_o['life_stats']['life']==0 or (self.usage=='deploy' and done):
                 break
             # search for the target
             tgt_find, tgt_info = self.env.target_in_sight(next_o, target)
+            # 如果找到目标且距离小于等于最大距离，将成功标志设置为真并结束循环。
             if tgt_find and tgt_info['dis']<=max_dis:
                 success=True
                 break
 
             # reset goal after several steps
+            # 如果步骤计数大于等于50，且找到目标并且目标距离小于当前目标距离，重设目标
             if step_cnt >= 50 and tgt_find and tgt_info['dis']<dis:
                 dis = tgt_info['dis']
                 step_cnt = 0

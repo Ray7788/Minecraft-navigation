@@ -105,7 +105,7 @@ def transform_action(act):
     elif act2 == 2: #attack
         action[5] = 3
     '''
-    # for find skill, ban the use action
+    # for find skill, ban(cancel) the use action
     if act2 == 2: #attack
         action[5] = 3
     return action #(8)
@@ -372,7 +372,7 @@ class MinecraftNavTestEnv(MinecraftNavEnv):
         else:
             raise NotImplementedError
 
-        #print(np.rad2deg(obs['rays']['ray_yaw']), obs['rays'][target_type+'_name'])
+        print("!!!!!",np.rad2deg(obs['rays']['ray_yaw']), obs['rays'][target_type+'_name'])
         names, distances = obs['rays'][target_type+'_name'], obs['rays'][target_type+'_distance']
         idxs = np.where(names==target)[0]
         if len(idxs)==0:

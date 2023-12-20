@@ -15,16 +15,17 @@ class SkillsModel:
         #print(self.skill_info)
 
     def execute(self, skill_name, skill_info, env):
+        # skill_info: skills.
         skill_type=skill_info['skill_type']
         equip=skill_info['equip']
         inventory = env.obs['inventory']['name']
-        # equip tools
+        # equip tools from the player's inventory
         for e in equip:
             idx = inventory.tolist().index(e.replace('_',' '))
             act = env.base_env.action_space.no_op()
             act[5] = 5
             act[7] = idx
-            obs, r, done, _ = env.step(act)
+            obs, r, done, _ = env.step(act) # obs, reward, done, info
             if done:
                 return False, bool(r), done # skill done, task success, task done
         '''
@@ -40,15 +41,15 @@ class SkillsModel:
         '''
 
         # execute skill
-        if skill_type==0:
+        if skill_type==0:   # SkillFind
             assert skill_name.endswith('_nearby')
-            return self.skill_models[0].execute(target=skill_name[:-7], env=env, **self.skill_info['find'])
-        elif skill_type==1:
+            return self.skill_models[0].execute(target=skill_name[:-7], env=env, **self.skill_info['find']) # 去除"_nearby", **将字典中的键值对解包为关键字参数传递给函数
+        elif skill_type==1: # SkillManipulate
             if not (skill_name in self.skill_info):
                 print('Warning: skill {} is not in load_skills.yaml'.format(skill_name))
                 return False, False, False
             return self.skill_models[1].execute(target=skill_name, env=env, equip_list=equip, **self.skill_info[skill_name])
-        elif skill_type==2:
+        elif skill_type==2: # SkillCraft
             return self.skill_models[2].execute(target=skill_name, env=env)
         else:
             raise Exception('Illegal skill_type.')

@@ -120,9 +120,12 @@ class DQN:
         self.action_dim = action_dim
 
     def take_action(self, obs, epsilon):
-        if np.random.random() < epsilon:
+        """
+        epsilon-greedy exploration strategy. It controls the probability of the agent taking a random action instead of exploiting the learned policy.
+        """
+        if np.random.random() < epsilon:    #  the agent chooses to explore by taking a random action.
             action = np.random.randint(0, self.action_dim)
-        else:
+        else:   # exploits its learned policy.  
             action = self.dqn(obs.obs).argmax().item()
         act = self.action_process(action)
         return act

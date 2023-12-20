@@ -91,7 +91,7 @@ def main(args):
 
     for ep in range(args.test_episode):
         env.reset()
-        episode_snapshots = [('begin', np.transpose(env.obs['rgb'], [1,2,0]).astype(np.uint8))]
+        episode_snapshots = [('begin', np.transpose(env.obs['rgb'], [1,2,0]).astype(np.uint8))] # beginning status
 
         # sequentially solve the initial computed skills. 
         if not args.progressive_search:
@@ -100,7 +100,7 @@ def main(args):
             episode_skill_success_unique = np.zeros(len(skill_sequence_unique))
             for i_sk, sk in enumerate(skill_sequence):
                 print('executing skill:',sk)
-                skill_done, task_success, task_done = skills_model.execute(skill_name=sk, skill_info=skills[sk], env=env)
+                skill_done, task_success, task_done = skills_model.execute(skill_name=sk, skill_info=skills[sk], env=env)   #  choose task type and task name
                 if skill_done or task_success:
                     skill_success_cnt[i_sk]+=1
                     episode_skill_success_unique[skill_sequence_unique.index(sk)]=1
@@ -168,13 +168,17 @@ def main(args):
     plt.bar([i for i in range(len(skill_sequence))], skill_success_cnt/args.test_episode, align="center", color="b",
         tick_label=skill_sequence)
     plt.ylabel('success rate')
+    plt.title('Success Rate for Each Skill')
     plt.savefig(os.path.join(save_dir,'success_skills.png'))
     plt.cla()
+
     plt.bar([i for i in range(len(skill_sequence_unique))], skill_success_cnt_unique/args.test_episode, align="center", color="b",
         tick_label=skill_sequence_unique)
     plt.ylabel('success rate')
+    plt.title('Success Rate for Each Skill (Unique)')
     plt.savefig(os.path.join(save_dir,'success_skills_unique.png'))
     plt.cla()
+
     print('success_skills', skill_success_cnt/args.test_episode, 'success_skills_unique', skill_success_cnt_unique/args.test_episode)
 
     test_success_rate /= args.test_episode
@@ -188,8 +192,8 @@ if __name__ == "__main__":
     parser.add_argument('--no-find-skill', type=int, default=0) # ablation without find-skill?
     parser.add_argument('--test-episode', type=int, default=30) # number of test episodes
     parser.add_argument('--seed', type=int, default=7) # random seed for both np, torch and env
-    parser.add_argument('--save-gif', type=int, default=0) # save whole gifs?
-    parser.add_argument('--save-path', type=str, default='test_hard_tasks')
+    parser.add_argument('--save-gif', type=int, default=1) # save whole gifs?
+    parser.add_argument('--save-path', type=str, default='test_hard_tasks_1')
     parser.add_argument('--clip-config-path', type=str, default='mineclip_official/config.yml')
     parser.add_argument('--clip-model-path', type=str, default='mineclip_official/attn.pth')
     parser.add_argument('--task-config-path', type=str, default='envs/hard_task_conf.yaml')
