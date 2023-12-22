@@ -299,7 +299,7 @@ RUN pip3 install pyyaml && \
     pip3 install torch==1.12.1 && \
     pip3 install torchvision==0.13.1 
 
-# Install MineRL with dataset
+# Install MineRL with dataset(currentlty v0.4.4, v1.0.2(with VPT) is not working, lot of users have the same problem, see https://github.com/minerllabs/minerl)
 RUN pip3 install git+https://github.com/minerllabs/minerl@v0.4.4 && \
     python3 -m minerl.data.download --environment "MineRLNavigate-v0" && \
     python3 -m minerl.data.download --environment "MineRLNavigateDense-v0"
@@ -335,3 +335,4 @@ ENTRYPOINT ["/etc/entrypoint.sh"]
 
 # docker build -t mc .
 # docker run --gpus all -it -d -p 8080:8080 -v "$(pwd)":/home/user mc:latest tail -f /dev/null
+# docker exec -it <running_container_id> /bin/bash
