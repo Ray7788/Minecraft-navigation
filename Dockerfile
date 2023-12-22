@@ -15,6 +15,8 @@ ENV NVIDIA_DRIVER_CAPABILITIES all
 # PulseAudio server addresss
 ENV PULSE_SERVER 127.0.0.1:4713
 
+# Store mineRL dataset in /dataset directory
+RUN mkdir -p /home/dataset
 # Default environment variables (password is "mypasswd")
 ENV TZ UTC
 # refresh rate of the virtual display
@@ -25,7 +27,7 @@ ENV WEBRTC_ENCODER nvh264enc
 ENV WEBRTC_ENABLE_RESIZE false
 ENV ENABLE_AUDIO false
 ENV ENABLE_BASIC_AUTH true
-ENV MINERL_DATA_ROOT /dataset
+ENV MINERL_DATA_ROOT /home/dataset
 
 # Temporary fix for NVIDIA container repository
 RUN apt-get clean && \
@@ -163,7 +165,9 @@ RUN dpkg --add-architecture i386 && \
         xfce4-weather-plugin \
         xfce4-whiskermenu-plugin \
         xfce4-xkb-plugin && \
+    # TODO: Remove this line when the uncessary package is deleted from the official image 
     apt-get install -y libreoffice && \
+    # Copy the default configuration file of the XFCE4 panel. This is necessary to avoid the error message "Failed to load saved session for panel" when starting the container.
     cp -rf /etc/xdg/xfce4/panel/default.xml /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml && \
     # Support libva and VA-API through NVIDIA VDPAU
     curl -fsSL -o /tmp/vdpau-va-driver.deb "https://launchpad.net/~saiarcot895/+archive/ubuntu/chromium-dev/+files/vdpau-va-driver_0.7.4-6ubuntu2~ppa1~18.04.1_amd64.deb" && apt-get install --no-install-recommends -y /tmp/vdpau-va-driver.deb && rm -rf /tmp/* && \
@@ -264,7 +268,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     ln -s /opt/noVNC/vnc.html /opt/noVNC/index.html && \
     git clone https://github.com/novnc/websockify /opt/noVNC/utils/websockify
 
-# Add custom packages below this comment
+# Add custom packages below this comment---------------------------------------
 # python 3.9 conda
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
@@ -285,19 +289,19 @@ RUN apt update -y && apt install -y software-properties-common && \
 # install MineDojo
 RUN pip3 install --no-cache-dir git+https://github.com/MineDojo/MineDojo 
 
+# install basic packages
 RUN pip3 install pyyaml && \
     pip3 install opencv-python && \
     pip3 install stable-baselines3[extra] &&\
     pip3 install gymnasium && \
-    # 
+    # basice packages for MineRL:
     pip3 install numpy==1.23.1 && \
     pip3 install torch==1.12.1 && \
     pip3 install torchvision==0.13.1 
 
-# and MineRL
-RUN pip3 install git+https://github.com/minerllabs/minerl@v0.4.4
-
-RUN python3 -m minerl.data.download --environment "MineRLNavigate-v0"&& \
+# Install MineRL with dataset
+RUN pip3 install git+https://github.com/minerllabs/minerl@v0.4.4 && \
+    python3 -m minerl.data.download --environment "MineRLNavigate-v0" && \
     python3 -m minerl.data.download --environment "MineRLNavigateDense-v0"
 
 # Create user with password ${PASSWD}
@@ -328,3 +332,6 @@ ENV VGL_DISPLAY egl
 ENV VGL_WM 1
 
 ENTRYPOINT ["/etc/entrypoint.sh"]
+
+# docker build -t mc .
+# docker run --gpus all -it -d -p 8080:8080 -v "$(pwd)":/home/user mc:latest tail -f /dev/null
