@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   
-  <title>new - Minecraft Navigation</title>
+  <title>21-12-2023 updates - Minecraft Navigation</title>
   
     <link rel="shortcut icon" href="/source/personal/rui.jpg">
   
@@ -16,15 +16,15 @@
   
   
   
-  <meta property="og:title" content="new - Minecraft Navigation" />
+  <meta property="og:title" content="21-12-2023 updates - Minecraft Navigation" />
   
   <meta property="og:type" content="article" />
   
-  <meta property="og:url" content="http://example.com/2023/12/20/new/index.html" />
+  <meta property="og:url" content="http://example.com/2023/12/21/new/index.html" />
   
   <meta property="og:image" content="/source/personal/rui.jpg" />
   
-  <meta property="og:article:published_time" content="2023-12-20T17:07:07.000Z" />
+  <meta property="og:article:published_time" content="2023-12-21T12:11:07.000Z" />
   
   <meta property="og:article:author" content="Rui Xu" />
   
@@ -127,18 +127,30 @@
         
         <div class="date" id="date">
             <span>December</span>
-            <span>20,</span>
+            <span>21,</span>
             <span>2023</span>
         </div>
         
 
-        <h2 class="title">new</h2>
+        <h2 class="title">21-12-2023 updates</h2>
     </div>
 
     <div class="divider"></div>
 
     <div class="content">
-        
+        <h1 id="UPDATES"><a href="#UPDATES" class="headerlink" title="UPDATES"></a>UPDATES</h1><h2 id="Initialise-Dockerfile"><a href="#Initialise-Dockerfile" class="headerlink" title="Initialise Dockerfile"></a>Initialise Dockerfile</h2><ul>
+<li>Make a new Dockerfile for the new project. Based on Minedojo and MineRL environment, remake new environment  and Intergrate existing dependencies(avoid conflict dependencies)<ul>
+<li>This Dockerfile installs a more extensive set of Xfce desktop environment components, including additional plugins and tools, much convinent and smaller than the traditional one.</li>
+<li>installs noVNC and X11VNC for web-based remote desktop access.\</li>
+<li>installs Miniconda with Python 3.9 and sets up the environment accordingly.</li>
+<li>creates a user named “user” with a specified password (${PASSWD}) and adds it to various groups, including “sudo.” It also configures passwordless sudo for this user.</li>
+<li>includes an EXPOSE 8080 directive to indicate that the container will listen on port 8080.</li>
+<li>installs the “MineDojo” Python package using pip3.</li>
+<li>Still use MineRl v0.4.4, the latest version v1.0.2 includes VPT, which is useful for this new project but it has installation errors(many users have the same problem, see <a target="_blank" rel="noopener" href="https://github.com/minerllabs/minerl/issues">https://github.com/minerllabs/minerl/issues</a>), but official developers from MineRL said Minedojo  has similar environment with mineRL v0.4.4, maybe it’s a good choice.</li>
+</ul>
+</li>
+</ul>
+
     </div>
 
     
