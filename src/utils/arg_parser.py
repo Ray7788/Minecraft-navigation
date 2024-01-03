@@ -1,26 +1,25 @@
 import argparse
-
-
+from envs import envs_manager
 
 class ArgParser:
     @staticmethod
     def create_parser() -> argparse.Namespace:
         parser = argparse.ArgumentParser(description="parses the arguments")
-        # Add the needed Arguments
-
+        # minedojo
         parser.add_argument(
-            '--task', 
+            '--task',
             type=str,
             help="Specify the task to run",
             default='harvest_milk_with_crafting_table_and_iron_ingot'
         )
 
-    # envs
+        # mineRL envs
         parser.add_argument(
             "--env_name",
             type=str,
             help="the class of environment to run in the visualisation.",
-            choices=tuple(EnvManager.envs.keys()),
+            choices=tuple(envs_manager.EnvsManager.envs.keys()),
+            default="Navigation",
         )
 
         parser.add_argument(
@@ -64,19 +63,22 @@ class ArgParser:
                             default='mineclip_official/config.yml')
         parser.add_argument('--clip-model-path', type=str,
                             default='mineclip_official/attn.pth')
-        parser.add_argument('--task-config-path', type=str,
-                            default='envs/hard_task_conf.yaml')
+        parser.add_argument(
+            '--task_config_path',
+            type=str,
+            default='envs/hard_task_conf.yaml'
+        )
+
         parser.add_argument('--skills-model-config-path',
                             type=str, default='skills/load_skills.yaml')
-    
+
     # seed for test episodes, random seed for both np, torch and env
         parser.add_argument(
             "--seed",
             type=int,
-            help="The seed value for the random number generation.", 
+            help="The seed value for the random number generation.",
             default=7
         )
-        # parser.add_argument('--test-episode', type=int,default=30)  # number of test episodes
         parser.add_argument(
             "--num_episodes",
             help="The number of episodes to visualise and save",
@@ -84,21 +86,21 @@ class ArgParser:
             default=30,
         )
 
-    # parser.add_argument('--save-path', type=str, default='test_hard_tasks_1')
     # save results
         parser.add_argument(
             "--save_path",
             help="Specify the outputs path to save the visualisations to.",
+            type=str,
             default="./results/"
         )
-    
+
         parser.add_argument(
             '--save_gif',
             help="choose 1 if save whole gifs",
             type=int,
             default=1
         )
-        
+
         parser.add_argument(
             "-ms",
             "--max_steps",
@@ -108,11 +110,11 @@ class ArgParser:
         )
 
         parser.add_argument(
-            "--n_envs", 
-            help="Specifies the number of envs", 
+            "--n_envs",
+            help="Specifies the number of envs",
             type=int, default=1
         )
-        
+
         parser.add_argument(
             "-v",
             "--verbose",
@@ -120,7 +122,7 @@ class ArgParser:
             action="count",
             default=0,
         )
-        
+
         parser.add_argument(
             "--radius",
             help="Specify how far the radius is from the target to the compass",
@@ -135,7 +137,7 @@ class ArgParser:
             action="store_true",
             default=False,
         )
-        
+
         parser.add_argument(
             "--distance",
             help="The distance from the diamond block",
@@ -187,6 +189,3 @@ class ArgParser:
             print("There is no valid agent")
             raise ValueError("There is no valid agent!")
         return agents
-
-
-
