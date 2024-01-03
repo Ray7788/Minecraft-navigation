@@ -1,0 +1,1 @@
+from sim.inventory import InventoryItem
