@@ -131,10 +131,10 @@ class MinecraftHardHarvestEnv:
             self.base_env.close()
 
         if self.target_name.endswith('_nearby'):
-            self.target_item_name = self.target_name[:-7]
+            self.target_item_name = self.target_name[:-7]   # finding任务去除'_nearby'
         else:
             self.target_item_name = self.target_name
-
+        # 创建新环境
         self.base_env = minedojo.make(
             task_id="harvest", 
             image_size=self.image_size, 
@@ -177,10 +177,14 @@ class MinecraftHardHarvestEnv:
         if self.clip_model is not None:
             with torch.no_grad():
                 img = torch_normalize(np.asarray(obs['rgb'], dtype=np.int)).view(1,1,*self.observation_size)
+                # 使用CLIP模型的图像编码器对输入图像进行编码，得到图像的嵌入表示 img_emb。该表示是一个包含图像信息的张量。
                 img_emb = self.clip_model.image_encoder(torch.as_tensor(img,dtype=torch.float).to(self.device))
                 obs['rgb_emb'] = img_emb.cpu().numpy() # (1,1,512)
-                #print(obs['rgb_emb'])
+                print(obs['rgb_emb'])
+                # 2.77990270e+00 -6.75320387e-01 -2.21763134e+00 -5.59767008e-01 -2.36041784e+00]]]
                 obs['prev_action'] = self.prev_action
+                print(obs['prev_action'])
+                # [ 0  0  0 12 12  0  0  0]
 
         if self.save_rgb:
             self.rgb_list = [np.transpose(obs['rgb'], [1,2,0]).astype(np.uint8)]

@@ -48,13 +48,14 @@ def main(args):
     # load task configs
     task_conf = utils.get_yaml_data(args.task_config_path)[args.task]
     #print(task_conf)
+    # 初始化库存
     init_items = {}
     if 'initial_inventory' in task_conf:
         init_items = task_conf['initial_inventory']
         init_inv = [InventoryItem(slot=i, name=k, variant=None, quantity=task_conf['initial_inventory'][k]) 
         for i,k in enumerate(list(task_conf['initial_inventory'].keys()))]
         task_conf['initial_inventory'] = init_inv
-    #print(init_inv)
+    print(init_inv)
 
     # ablation for max steps
     if args.shorter_episode:
@@ -80,11 +81,13 @@ def main(args):
     if len(init_items_miss)>0:
         raise Exception('Cannot finish task because of missing initial items: {}'.format(init_items_miss))
     print('Task {} decomposed into skill sequence: {}'.format(args.task, skill_sequence))
+    # Task harvest_milk_with_crafting_table_and_iron_ingot decomposed into skill sequence: ['crafting_table_nearby', 'bucket', 'cow_nearby', 'milk_bucket']
 
     skill_success_cnt = np.zeros(len(skill_sequence))
     print('Initial skill sequence: {}, length: {}'.format(skill_sequence, len(skill_sequence)))
+    # Initial skill sequence: ['crafting_table_nearby', 'bucket', 'cow_nearby', 'milk_bucket'], length: 4
     skill_sequence_unique = list(set(skill_sequence))
-    skill_sequence_unique.sort(key=skill_sequence.index)
+    skill_sequence_unique.sort(key=skill_sequence.index)    # sequential 排序
     skill_success_cnt_unique = np.zeros(len(skill_sequence_unique))
     print('Unique skill list: {}, length: {}'.format(skill_sequence_unique, len(skill_sequence_unique)))
     test_success_rate = 0
@@ -95,12 +98,12 @@ def main(args):
 
         # sequentially solve the initial computed skills. 
         if not args.progressive_search:
-            assert args.no_find_skill==0
+            assert args.no_find_skill==0    # TODO 搞清楚意思
             assert args.shorter_episode==0
             episode_skill_success_unique = np.zeros(len(skill_sequence_unique))
             for i_sk, sk in enumerate(skill_sequence):
                 print('executing skill:',sk)
-                skill_done, task_success, task_done = skills_model.execute(skill_name=sk, skill_info=skills[sk], env=env)   #  choose task type and task name
+                skill_done, task_success, task_done = skills_model.execute(skill_name=sk, skill_info=skills[sk], env=env)   #  choose task type and task name from skills.yaml
                 if skill_done or task_success:
                     skill_success_cnt[i_sk]+=1
                     episode_skill_success_unique[skill_sequence_unique.index(sk)]=1

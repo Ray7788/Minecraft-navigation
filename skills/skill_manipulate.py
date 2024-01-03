@@ -36,6 +36,7 @@ class SkillManipulate:
             **agent_config['actor'],
             activation='tanh'
         )
+        # 调用Mineagent
         self.mine_agent = MineAgent(
             actor=actor, 
             critic=critic,
@@ -55,6 +56,7 @@ class SkillManipulate:
         for step in range(max_steps):
             batch = preprocess_obs(obs, self.device)
             with torch.no_grad():
+                # 使用 MineAgent 获取动作
                 act = self.mine_agent(batch).act
             act = transform_action(act, allow_use)
             obs, r, done, _ = env.step(act)

@@ -21,7 +21,7 @@ class SkillFind:
             
         env_high = MinecraftNav(max_steps=max_steps_high, usage='deploy', env=env, low_level_policy_type='dqn',
             device=self.device)
-        state_dict, config = pickle.load(open(model_path, "rb"))
+        state_dict, config = pickle.load(open(model_path, "rb"))    #读取预训练模型
         model = ActorCriticModel(config, env_high.observation_space, (env_high.action_space.n,))
         model.load_state_dict(state_dict)
         model.to(self.device)
