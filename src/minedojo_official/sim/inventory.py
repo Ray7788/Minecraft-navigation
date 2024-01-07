@@ -1,8 +1,9 @@
 from typing import NamedTuple, Optional, Dict, Union, Tuple
 
-from minedojo.sim.mc_meta.mc import ALL_ITEMS
+# TODO: replace this with minerl(temporary solution)
+from .mc_meta.mc import ALL_ITEMS
 
-
+# https://minecraft.fandom.com/wiki/Slot
 EQUIP_SLOTS = {
     "mainhand": 0,
     "offhand": 40,
@@ -13,10 +14,14 @@ EQUIP_SLOTS = {
 }
 MIN_SLOT_IDX = 0
 MAX_SLOT_IDX = 40
+# Create a reverse mapping for EQUIP_SLOTS
 SLOT_IDX2NAME = {v: k for k, v in EQUIP_SLOTS.items()}
 
 
 class InventoryItem(NamedTuple):
+    """ 
+    A named tuple representing an item in the inventory
+    """
     # slot of the item occupies,
     # can be str specifying "main_hand", "off_hand", "head", etc... or int specifying the slot index
     slot: Union[str, int]
@@ -26,6 +31,9 @@ class InventoryItem(NamedTuple):
 
 
 def parse_inventory_item(item: InventoryItem) -> Tuple[int, Dict[str, Union[str, int]]]:
+    """
+    Parse an InventoryItem into a tuple of slot and a dict of item metadata
+    """
     slot, name, variant, quantity = item.slot, item.name, item.variant, item.quantity
     if isinstance(slot, str):
         assert slot in EQUIP_SLOTS, f"Unknown slot {slot}"
@@ -33,7 +41,8 @@ def parse_inventory_item(item: InventoryItem) -> Tuple[int, Dict[str, Union[str,
     assert MIN_SLOT_IDX <= slot <= MAX_SLOT_IDX, f"invalid slot index {slot}"
     assert name in ALL_ITEMS, f"Unknown item {name}"
     variant = variant or 0
-    quantity = quantity or 1
+    quantity = quantity or 1    # default quantity is 1
+
     return slot, {
         "type": name,
         "metadata": variant,
@@ -42,6 +51,10 @@ def parse_inventory_item(item: InventoryItem) -> Tuple[int, Dict[str, Union[str,
 
 
 def map_slot_number_to_cmd_slot(slot_number: int) -> str:
+    """
+    Map slot number to command slot
+    https://minecraft.fandom.com/wiki/Slot#Command_argument
+    """
     assert MIN_SLOT_IDX <= slot_number <= MAX_SLOT_IDX, "exceed slot index range"
     if slot_number in {0, 40}:
         return f"slot.weapon.{SLOT_IDX2NAME[slot_number]}"
