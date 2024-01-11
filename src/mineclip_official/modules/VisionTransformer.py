@@ -60,3 +60,29 @@ class VisionTransformer(nn.Module):
     #             [r // self._patch_size for r in new_resolution],
     #         )
     #         self.pos_embed = nn.Parameter(torch.cat([cls_embed, new_embed], dim=0))
+        
+    def forward(self, x: torch.Tensor):
+        bs,ts,c,h,w = x.shape
+        x = x.reshape(bs*ts,c,h,w)
+        
+        x = self.conv1(x)  # shape = [*, width, grid, grid]
+        B = x.size(0)
+        x = x.reshape(B, x.shape[1], -1)  # shape = [*, width, grid ** 2]
+        x = x.permute(0, 2, 1)  # shape = [*, grid ** 2, width]
+        x = torch.cat(
+            [self.cls_token.repeat((B, 1, 1)), x], dim=1
+        )  # shape = [*, grid ** 2 + 1, width]
+        x = x + self.pos_embed
+        x = self.ln_pre(x)
+
+        x = x.permute(1, 0, 2)  # NLD -> LND
+        x = self.blocks(x)
+        x = x.permute(1, 0, 2)  # LND -> NLD
+
+        x = self.ln_post(x[:, 0, :])
+
+        if self.projection is not None:
+            x = x @ self.projection
+
+        x = x.reshape(bs,ts,-1)
+        return x
