@@ -230,9 +230,8 @@ class ExtraSpawnMetaTaskBase(MetaTaskBase):
         success_criteria: The success criteria of the task.
     """
 
-    # TODO (yunfan): complete these lists
-    by_setblock = ["diamond_ore", "gold_ore", "iron_ore", "coal_ore"]
-    by_summon = ["pig", "cow", "bat", "cat", "chicken", "horse", "sheep", "zombie"]
+    by_setblock = ["diamond_ore", "gold_ore", "iron_ore", "coal_ore", "emerald_ore", "lapis_lazuli_ore", "nether_quartz_ore", "redstone_ore", "obsidian", "gravel", "sand", "clay", "snow_block", "ice", "packed_ice", "blue_ice", "glowstone", "netherrack", "soul_sand", "end_stone"]
+    by_summon = ["pig", "cow", "bat", "cat", "chicken", "horse", "sheep", "zombie", "enderman", "blaze", "ghast", "slime", "spider", "squid", "wolf", "polar_bear", "rabbit", "parrot", "llama", "dolphin", "turtle", "fox", "bee", "villager", "witch", "creeper", "skeleton", "wither_skeleton", "stray", "husk", "zombie_villager", "phantom", "pillager", "ravager", "ender_dragon", "wither"]
 
     def __init__(
         self,
