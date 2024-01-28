@@ -5,9 +5,7 @@ from .utils import (
     check_below_light_level_condition,
 )
 
-# TODO (yunfan): complete these dicts
-# this dict specifies target items and corresponding blocks to obtain,
-# e.g., break diamond ore to obtain a diamond
+
 Target2SpawnItem = {
     # ore
     "cobblestone": "stone",
@@ -27,10 +25,80 @@ Target2SpawnItem = {
     "feather": "chicken",
     "wool": "sheep",
     "milk_bucket": "cow",
+    # additional mob byproduct
+    "rabbit_hide": "rabbit",
+    "rabbit_foot": "rabbit",
+    "rabbit": "rabbit",
+    "string": "spider",
+    "gunpowder": "creeper",
+    "slime_ball": "slime",
+    "ender_eye": "enderman",
+    "blaze_rod": "blaze",
+    "ghast_tear": "ghast",
+    "zombie_head": "zombie",
+    "blaze_rod": "blaze",
+    "ghast_tear": "ghast",
+    "slime_ball": "slime",
     # plant byproduct
     "wheat_seeds": "wheat",
     "beetroot_seeds": "beetroot",
     "pumpkin_seeds": "pumpkin",
+    # additional supplement
+    "melon_seeds": "melon",
+    "carrot": "carrot",
+    "potato": "potato",
+    "sugar": "reeds",
+    "egg": "chicken",
+    # crafted items
+    "diamond_pickaxe": "diamond",
+    "diamond_sword": "diamond",
+    "diamond_axe": "diamond",
+    "diamond_shovel": "diamond",
+    "diamond_hoe": "diamond",
+    "iron_pickaxe": "iron_ingot",
+    "iron_sword": "iron_ingot",
+    "iron_axe": "iron_ingot",
+    "iron_shovel": "iron_ingot",
+    "iron_hoe": "iron_ingot",
+    "gold_pickaxe": "gold_ingot",
+    "gold_sword": "gold_ingot",
+    "gold_axe": "gold_ingot",
+    "gold_shovel": "gold_ingot",
+    "gold_hoe": "gold_ingot",
+    # existing mappings...
+    "emerald": "emerald_ore",
+    "lapis_lazuli": "lapis_lazuli_ore",
+    "nether_quartz": "nether_quartz_ore",
+    "obsidian": "lava_bucket",
+    "flint": "gravel",
+    # plant byproduct
+    "apple": "oak_leaves",
+    "cocoa_beans": "jungle_log",
+    "bamboo": "bamboo_sapling",
+    "sweet_berries": "sweet_berry_bush",
+    "kelp": "kelp_plant",
+    # crafted items
+    "bread": "wheat",
+    "cake": "milk_bucket",
+    "cookie": "wheat",
+    "pumpkin_pie": "pumpkin",
+    "clock": "gold_ingot",
+    "compass": "iron_ingot",
+    "cookie": "wheat",
+    "cake": "milk_bucket",
+    "pumpkin_pie": "pumpkin",
+    "tropical_fish_bucket": "tropical_fish",
+    "pufferfish_bucket": "pufferfish",
+    "cod_bucket": "cod",
+    "salmon_bucket": "salmon",
+    "axolotl_bucket": "axolotl",
+    "glow_berries": "glow_berries",
+    "powder_snow_bucket": "powder_snow",
+    "bucket_of_tropical_fish": "tropical_fish",
+    "bucket_of_pufferfish": "pufferfish",
+    "bucket_of_cod": "cod",
+    "bucket_of_salmon": "salmon",
+    "bucket_of_axolotl": "axolotl",
 }
 
 # this dict specifies spawn conditions
