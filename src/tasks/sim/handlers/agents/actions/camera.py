@@ -3,7 +3,7 @@
 import numpy as np
 
 import minerl.herobraine.hero.spaces as spaces
-from minedojo.sim.handlers.agent.action import Action
+from ..action import Action
 
 
 class CameraAction(Action):
