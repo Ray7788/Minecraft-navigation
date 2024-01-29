@@ -8,9 +8,6 @@ def get_yaml_data(yaml_file):
     file = open(yaml_file, 'r', encoding="utf-8")
     file_data = file.read()
     file.close()
-    #print(file_data)
-    
     data = yaml.load(file_data, Loader=yaml.FullLoader)
-    #print(data)
 
     return data

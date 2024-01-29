@@ -2,6 +2,10 @@ import argparse
 from envs import envs_manager
 
 class ArgParser:
+    """
+    Provides a common argument parser that makes it easy to create and manage different MineRL & Gym environments.
+    """
+    
     @staticmethod
     def create_parser() -> argparse.Namespace:
         parser = argparse.ArgumentParser(description="parses the arguments")
@@ -65,6 +69,7 @@ class ArgParser:
                             default='mineclip_official/attn.pth')
         parser.add_argument(
             '--task_config_path',
+            help="speicify the path of task config",
             type=str,
             default='envs/hard_task_conf.yaml'
         )
@@ -181,11 +186,11 @@ class ArgParser:
 
         return args
 
-    @staticmethod
-    def split_agent(agents: str):
-        agents = agents.strip().split(",")
-        agents = [a for a in agents if a in AgentManager.agents]
-        if len(agents) == 0:
-            print("There is no valid agent")
-            raise ValueError("There is no valid agent!")
-        return agents
+    # @staticmethod
+    # def split_agent(agents: str):
+    #     agents = agents.strip().split(",")
+    #     agents = [a for a in agents if a in AgentManager.agents]
+    #     if len(agents) == 0:
+    #         print("There is no valid agent")
+    #         raise ValueError("There is no valid agent!")
+    #     return agents
