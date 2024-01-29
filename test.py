@@ -51,11 +51,15 @@ def main(args):
     # 初始化库存
     init_items = {}
     if 'initial_inventory' in task_conf:
-        init_items = task_conf['initial_inventory']
+        init_items = task_conf['initial_inventory'] # 把所有的inventory抓取下来
+        # -------------------------------------------------------------
+        # 为每个物品创造InventoryItem，存成list k: inventory的每个key i:索引 value是物品的quantity
         init_inv = [InventoryItem(slot=i, name=k, variant=None, quantity=task_conf['initial_inventory'][k]) 
         for i,k in enumerate(list(task_conf['initial_inventory'].keys()))]
+        # -------------------------------------------------------------
         task_conf['initial_inventory'] = init_inv
-    print(init_inv)
+    # print(init_inv)
+    # [InventoryItem(slot=0, name='crafting_table', variant=None, quantity=1), InventoryItem(slot=1, name='iron_ingot', variant=None, quantity=3)]
 
     # ablation for max steps
     if args.shorter_episode:
@@ -81,6 +85,7 @@ def main(args):
     if len(init_items_miss)>0:
         raise Exception('Cannot finish task because of missing initial items: {}'.format(init_items_miss))
     print('Task {} decomposed into skill sequence: {}'.format(args.task, skill_sequence))
+    # 只显示一次
     # Task harvest_milk_with_crafting_table_and_iron_ingot decomposed into skill sequence: ['crafting_table_nearby', 'bucket', 'cow_nearby', 'milk_bucket']
 
     skill_success_cnt = np.zeros(len(skill_sequence))
@@ -90,12 +95,17 @@ def main(args):
     skill_sequence_unique.sort(key=skill_sequence.index)    # sequential 排序
     skill_success_cnt_unique = np.zeros(len(skill_sequence_unique))
     print('Unique skill list: {}, length: {}'.format(skill_sequence_unique, len(skill_sequence_unique)))
+    # Unique skill list: ['crafting_table_nearby', 'bucket', 'cow_nearby', 'milk_bucket'], length: 4
     test_success_rate = 0
 
     for ep in range(args.test_episode):
         env.reset()
         episode_snapshots = [('begin', np.transpose(env.obs['rgb'], [1,2,0]).astype(np.uint8))] # beginning status
-
+        print('episode', episode_snapshots[0][0])
+        # [[40, 49, 64],
+        # [40, 49, 65],
+        # [41, 50, 66]
+        
         # sequentially solve the initial computed skills. 
         if not args.progressive_search:
             assert args.no_find_skill==0    # TODO 搞清楚意思
@@ -103,6 +113,7 @@ def main(args):
             episode_skill_success_unique = np.zeros(len(skill_sequence_unique))
             for i_sk, sk in enumerate(skill_sequence):
                 print('executing skill:',sk)
+                # 测试的skill type是1
                 skill_done, task_success, task_done = skills_model.execute(skill_name=sk, skill_info=skills[sk], env=env)   #  choose task type and task name from skills.yaml
                 if skill_done or task_success:
                     skill_success_cnt[i_sk]+=1
@@ -113,16 +124,16 @@ def main(args):
             #print(skill_success_cnt)
             print('skill done {}, task success {}, task done {}'.format(skill_done, task_success, task_done))
             skill_success_cnt_unique += episode_skill_success_unique
-        # update the future skill sequence after each skill.
+        # update the future skill sequence after each skill. 每次都更新
         else:
             episode_skill_success = np.zeros(len(skill_sequence))
             episode_skill_success_unique = np.zeros(len(skill_sequence_unique))
             episode_skill_idx = 0
-            skill_next = skill_sequence[0]
-            # ablation: skip find skills
-            if args.no_find_skill and skills[skill_next]['skill_type']==0:
-                skill_next = skill_sequence[1]
-                assert skills[skill_next]['skill_type']!=0
+            skill_next = skill_sequence[0]  #下一个任务
+            # ablation: skip find skills    跳过find（一般不进入该循环）
+            if args.no_find_skill and skills[skill_next]['skill_type']==0:  
+                skill_next = skill_sequence[1] # 跳过当前
+                assert skills[skill_next]['skill_type']!=0 #再次检查
             init_items_next = init_items
             while True:
                 print('executing skill:',skill_next)

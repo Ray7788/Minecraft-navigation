@@ -165,11 +165,14 @@ class MinecraftHardHarvestEnv:
         print('Environment remake: reset all the destroyed blocks!')
 
     def reset(self):
-        self.cur_step = 0
-        self.prev_action = self.base_env.action_space.no_op()
+        """
+        Reset the environment. This function is called when a new episode starts.
+        """
+        self.cur_step = 0   # 当前步数
+        self.prev_action = self.base_env.action_space.no_op()   # [0,0,0,12,12,0,0,0]
         self.base_env.reset(move_flag=True) # reset after random teleport, spawn mobs nearby
-        self.base_env.unwrapped.set_time(6000)
-        self.base_env.unwrapped.set_weather("clear")
+        self.base_env.unwrapped.set_time(6000)  # reset time to day
+        self.base_env.unwrapped.set_weather("clear")    # reset weather to clear
         # make agent fall onto the ground after teleport
         for i in range(4):
             obs, _,_,_ = self.base_env.step(self.base_env.action_space.no_op())
@@ -180,10 +183,10 @@ class MinecraftHardHarvestEnv:
                 # 使用CLIP模型的图像编码器对输入图像进行编码，得到图像的嵌入表示 img_emb。该表示是一个包含图像信息的张量。
                 img_emb = self.clip_model.image_encoder(torch.as_tensor(img,dtype=torch.float).to(self.device))
                 obs['rgb_emb'] = img_emb.cpu().numpy() # (1,1,512)
-                print(obs['rgb_emb'])
+                # print(obs['rgb_emb'])
                 # 2.77990270e+00 -6.75320387e-01 -2.21763134e+00 -5.59767008e-01 -2.36041784e+00]]]
                 obs['prev_action'] = self.prev_action
-                print(obs['prev_action'])
+                # print(obs['prev_action'])
                 # [ 0  0  0 12 12  0  0  0]
 
         if self.save_rgb:
@@ -210,18 +213,20 @@ class MinecraftHardHarvestEnv:
         
         if self.clip_model is not None:
             with torch.no_grad():
+                # 1. 对输入图像进行预处理，得到预处理后的图像 img, 并将其转换为张量。
                 img = torch_normalize(np.asarray(obs['rgb'], dtype=np.int)).view(1,1,*self.observation_size)
                 img_emb = self.clip_model.image_encoder(torch.as_tensor(img,dtype=torch.float).to(self.device))
                 obs['rgb_emb'] = img_emb.cpu().numpy() # (1,1,512)
                 #print(obs['rgb_emb'])
                 obs['prev_action'] = self.prev_action
 
-        self.prev_action = act # save the previous action for the agent's observation
+        self.prev_action = act # save the current action as previous action for the agent's observation, for next step
         self.last_obs = self.obs
         self.obs = obs
         if self.save_rgb:
             self.rgb_list.append(np.transpose(obs['rgb'], [1,2,0]).astype(np.uint8))
             self.action_list.append(np.asarray(act))
+        # 返回obs, reward, done, info
         return  obs, reward, done, info
 
     # for Find skill: detect target items
@@ -277,6 +282,9 @@ class MinecraftHardHarvestEnv:
 
     # compute harvest reward under different cases
     def reward_harvest(self, obs, target_name, target_quantity=1, incremental=True):
+        """
+        Compute the reward for harvest tasks.
+        """
         # target nearby
         if target_name.endswith('_nearby'):
             target_item_name = target_name[:-7]

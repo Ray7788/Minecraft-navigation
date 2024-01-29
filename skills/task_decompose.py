@@ -54,7 +54,7 @@ def vis_graph():
 
 possess = {}
 def skill_search(target, init_items={}):
-	results, init_items_miss = [], {}
+	results, init_items_miss = [], {}	# results就是skill_sequence
 	global possess
 	possess = deepcopy(init_items)
 

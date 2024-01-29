@@ -9,8 +9,8 @@ class SkillsModel:
         self.skill_info = utils.get_yaml_data(path)
         self.skill_models = [
             # 预存的model
-            SkillFind(device=device),
-            SkillManipulate(device=device),
+            SkillFind(device=device),   # 0
+            SkillManipulate(device=device), # 1
             SkillCraft()
         ]
         #print(self.skill_info)
@@ -27,10 +27,11 @@ class SkillsModel:
         for e in equip:
             idx = inventory.tolist().index(e.replace('_',' '))
             act = env.base_env.action_space.no_op()
-            print("1nd", act)
+            # print("1nd", act)
             act[5] = 5
             act[7] = idx
-            print("2nd", act)
+            # print("2nd", act)
+            # [ 0  0  0 12 12  5  0  0]
             obs, r, done, _ = env.step(act) # obs, reward, done, info
             if done:
                 return False, bool(r), done # skill done, task success, task done
