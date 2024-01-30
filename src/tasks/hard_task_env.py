@@ -1,5 +1,4 @@
-# environment for hard harvest tasks
-# support 3 types of skills
+# environment for hard harvest tasks, support 3 types of skills
 import numpy as np
 import torch
 from mineclip_official import torch_normalize
@@ -69,10 +68,13 @@ class MinecraftHardHarvestEnv:
         print('Environment remake: reset all the destroyed blocks!')
 
     def reset(self):
+        """
+        Reset the environment. This function is called when a new episode starts.
+        """
         self.cur_step = 0
         self.prev_action = self.base_env.action_space.no_op()
-        # reset after random teleport, spawn mobs nearby
         self.base_env.reset(move_flag=True)
+        # Reset the environment: time, weather
         self.base_env.unwrapped.set_time(6000)
         self.base_env.unwrapped.set_weather("clear")
         # make agent fall onto the ground after teleport
@@ -94,6 +96,7 @@ class MinecraftHardHarvestEnv:
             self.rgb_list = [np.transpose(
                 obs['rgb'], [1, 2, 0]).astype(np.uint8)]
             self.action_list = []
+
         self.obs = obs
         self.last_obs = obs
         return obs
