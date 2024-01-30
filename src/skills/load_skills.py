@@ -1,4 +1,4 @@
-import utils 
+from utils import get_yaml_data
 from .skill_manipulate import SkillManipulate
 from .skill_craft import SkillCraft
 from .skill_find import SkillFind
@@ -7,7 +7,7 @@ from .skill_find import SkillFind
 class SkillsModel:
     def __init__(self, device, path='skills/load_skills.yaml'):
         self.device = device
-        self.skill_info = utils.get_yaml_data(path)
+        self.skill_info = get_yaml_data(path)
         self.skill_models = [
             SkillFind(device=device),
             SkillManipulate(device=device),
@@ -53,7 +53,8 @@ class SkillsModel:
 
         # execute detailed skills based on skill_type
         if skill_type == 0:   # SkillFind
-            assert skill_name.endswith('_nearby')   # check if the skill name ends with "_nearby"
+            # check if the skill name ends with "_nearby"
+            assert skill_name.endswith('_nearby')
             # Remove "_nearby", and **Unpack the key-value pairs in the dictionary and pass them to the function
             return self.skill_models[0].execute(target=skill_name[:-7], env=env, **self.skill_info['find'])
         elif skill_type == 1:  # SkillManipulate
