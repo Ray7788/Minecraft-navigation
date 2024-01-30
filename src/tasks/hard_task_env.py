@@ -1,12 +1,16 @@
 # environment for hard harvest tasks, support 3 types of skills
 import numpy as np
 import torch
-from mineclip_official import torch_normalize
+from ..mineclip_official import torch_normalize
 from init_task import make
 SUBGOAL_DISTANCE = 10
 
 
 class MinecraftHardHarvestEnv:
+    """
+    Environment for hard harvest tasks, support 3 types of skills
+    """
+
     def __init__(self, image_size=(160, 256), seed=0, biome='plains', clip_model=None, device=None, save_rgb=False,
                  target_name='log', target_quantity=1,  max_steps=3000, **kwargs):
         self.observation_size = (3, *image_size)
@@ -33,10 +37,12 @@ class MinecraftHardHarvestEnv:
     def remake_env(self):
         if hasattr(self, 'base_env'):
             self.base_env.close()
-
+        
+        # if name ends with _nearby, then it is a nearby task, detect _nearby 
         self.target_item_name = self.target_name[:-7] if self.target_name.endswith(
             '_nearby') else self.target_name
 
+        # Make a new environment
         self.base_env = make(
             task_id="harvest",
             image_size=self.image_size,
@@ -102,6 +108,9 @@ class MinecraftHardHarvestEnv:
         return obs
 
     def step(self, act):
+        """
+        Take an action and return the new observation, reward, done flag, and info dict.
+        """
         obs, reward, done, info = self.base_env.step(act)
         if self.target_name.endswith('_nearby'):
             reward = self.reward_harvest(obs, self.target_name)
@@ -135,8 +144,12 @@ class MinecraftHardHarvestEnv:
             self.action_list.append(np.asarray(act))
         return obs, reward, done, info
 
-    # for Find skill: detect target items
     def target_in_sight(self, obs, target, max_dis=20):
+        """
+        Detect target items in the agent's sight
+        This is for Find skill
+        """
+        # convert target name to specific type
         if target in ['wood', 'stone']:
             target_type = 'block'
         elif target in ['cow', 'sheep']:
@@ -160,15 +173,15 @@ class MinecraftHardHarvestEnv:
         pos = obs['location_stats']['pos']
         dr = [np.cos(np.deg2rad(yaw)), np.sin(np.deg2rad(yaw))]
         target_pos = np.array([pos[0]-dis*dr[1], pos[2]+dis*dr[0]])
+        
         return True, {'dis': dis, 'yaw': yaw, 'yaw_relative': yaw_relative, 'target_pos': target_pos}
 
-    '''
-    for goal-based find skill
-    pos: (x,y,z) current position
-    g: (cos t, sin t) target yaw direction
-    '''
-
     def set_goal(self, pos, g=None):
+        """
+        for goal-based find skill
+        pos: (x,y,z) current position
+        g: (cos t, sin t) target yaw direction
+        """
         if g is None:
             # g = 2*np.pi*np.random.rand()
             g = 0.5*np.pi*np.random.randint(0, 4)  # simpler: 4 goals
@@ -183,15 +196,28 @@ class MinecraftHardHarvestEnv:
         return g
 
     def add_goal_to_obs(self, obs):
+        """
+        for goal-based find skill, add goal embedding to observation
+        """
         yaw = np.deg2rad(obs["location_stats"]["yaw"])
-        yaw = np.concatenate([np.cos(yaw), np.sin(yaw)])
+        yaw = np.concatenate([np.cos(yaw), np.sin(yaw)])    # [cos t, sin t]
         pos = obs['location_stats']['pos']
         pos = np.array([pos[0], pos[2]])  # [x,z]
         obs['goal_emb'] = np.concatenate([self.goal, yaw, self.goal_pos-pos])
 
     # compute harvest reward under different cases
-
     def reward_harvest(self, obs, target_name, target_quantity=1, incremental=True):
+        """
+        Compute harvest reward under different cases
+
+        Args:
+        obs: current observation
+        target_name: target item name
+        target_quantity: target item quantity
+        incremental: incremental reward
+
+        return: 1 if target item is harvested, 0 otherwise
+        """
         # target nearby
         if target_name.endswith('_nearby'):
             target_item_name = target_name[:-7]
@@ -212,7 +238,7 @@ class MinecraftHardHarvestEnv:
         # target in inventory
         else:
             names, nums = obs['inventory']['name'], obs['inventory']['quantity']
-            # print('inventory:',names)
+            # print('inventory:',names, "num is:", nums)
             idxs = np.where(names == target_name.replace('_', ' '))[0]
             if len(idxs) == 0:
                 return 0
