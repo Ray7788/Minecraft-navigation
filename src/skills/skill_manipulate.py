@@ -1,4 +1,4 @@
-from skills.hard_utils import preprocess_obs, transform_action
+from ..tasks.utils.hard_task_utils import preprocess_obs, transform_action
 from mineagent import features, SimpleFeatureFusion, MineAgent, MultiCategoricalActor, Critic
 from utils import get_yaml_data
 import copy
