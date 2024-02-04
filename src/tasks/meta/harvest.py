@@ -1,7 +1,7 @@
 from typing import Optional, Union, List, Tuple, Dict
 
 from .base import ExtraSpawnMetaTaskBase
-from ...sim.inventory import InventoryItem
+from ..sim.inventory import InventoryItem
 from .extra_spawn import Target2SpawnItem, SpawnItem2Condition
 from .utils import (
     always_satisfy_condition,

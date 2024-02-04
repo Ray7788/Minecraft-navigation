@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import List, Dict, Any, Union, Tuple, Optional, Literal
 
 from ..base import MetaTaskBase
-from ....sim.inventory import InventoryItem
+from ...sim.inventory import InventoryItem
 
 
 class CreativeMeta(MetaTaskBase):

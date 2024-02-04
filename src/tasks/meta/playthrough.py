@@ -1,7 +1,7 @@
 from typing import Optional, Union, List, Dict, Tuple
 
 from .base import MetaTaskBase
-from ...sim.inventory import InventoryItem
+from ..sim.inventory import InventoryItem
 from .utils import simple_inventory_based_check, possess_item_reward
 
 

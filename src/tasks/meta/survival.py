@@ -1,7 +1,7 @@
 from typing import Union, Optional, List, Dict, Tuple
 
 from .base import MetaTaskBase
-from ...sim.inventory import InventoryItem
+from ..sim.inventory import InventoryItem
 from .utils import survive_per_day_reward, survive_n_days_reward, time_since_death_check
 
 

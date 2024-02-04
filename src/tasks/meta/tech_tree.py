@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Union, Dict, Optional, Tuple, List
 
 from .base import ExtraSpawnMetaTaskBase
-from ...sim.inventory import InventoryItem
+from ..sim.inventory import InventoryItem
 from .extra_spawn import SpawnItem2Condition
 from .utils import (
     always_satisfy_condition,
