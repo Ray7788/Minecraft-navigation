@@ -1,5 +1,5 @@
 from envs.mlg_wb_specs import MLGWB
-from envs.standard_navigation_env import Navigation
+from user.src.envs.standard_navigation_env import Navigation
 import gym
 import numpy as np
 
@@ -12,6 +12,7 @@ class EnvsManager:
         "MineRLNavigate": "MineRLNavigate-v0",
         "MineRLNavigateDense": "MineRLNavigateDense-v0",
         "navigation": "navigation-v0",
+        "MinecraftHardHarvestEnv": "MinecraftHardHarvestEnv",
     }
 
     human_envs = {"navigation": "MineRLNavigateDense-v0"}
