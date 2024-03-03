@@ -1,21 +1,26 @@
+from __future__ import annotations
 import copy
 import re
 from typing import Union
 import importlib_resources
-import numpy as np
-from omegaconf import OmegaConf
-from user.src.minedojo_official.sim.inventory import InventoryItem
-from all_vars import _ALL_VARS
-from user.src.tasks.meta.base import MetaTaskBase
-from user.src.tasks.meta.combat import CombatMeta
-from user.src.tasks.meta.creative.creative import CreativeMeta
-from user.src.tasks.meta.harvest import HarvestMeta
-from user.src.tasks.meta.playthrough import Playthrough
-from user.src.tasks.meta.survival import SurvivalMeta
-from user.src.tasks.meta.tech_tree import TechTreeMeta
-SUBGOAL_DISTANCE = 10
 from itertools import product
-from typing import Union
+from omegaconf import OmegaConf
+from .utils.all_vars import _ALL_VARS
+
+from .meta.base import MetaTaskBase
+from .sim.inventory import InventoryItem
+from .sim.sim import MineDojoSim
+from .sim.wrappers import FastResetWrapper, ARNNWrapper
+from .meta import (
+    HarvestMeta,
+    CombatMeta,
+    TechTreeMeta,
+    Playthrough,
+    SurvivalMeta,
+    CreativeMeta,
+)
+SUBGOAL_DISTANCE = 10
+
 
 def _resource_file_path(file_name) -> str:
     """Retrieves the absolute file path of a specified resource file within the package."""
@@ -67,10 +72,11 @@ def _meta_task_make(meta_task: str, *args, **kwargs) -> Union[MetaTaskBase, Fast
         # 上面前2个暂时不用，可省略
         if fast_reset is True:
             return FastResetWrapper(
-                MineDojoSim(*args, **kwargs), fast_reset_random_teleport_range_high,fast_reset_random_teleport_range_low
+                MineDojoSim(*args, **kwargs), fast_reset_random_teleport_range_high, fast_reset_random_teleport_range_low
             )
 
     return MetaTaskName2Class[meta_task](*args, **kwargs)
+
 
 def product_dict(**kwargs):
     """
@@ -198,8 +204,8 @@ def _specific_task_make(task_id: str, *args, **kwargs):
     For Programmatic tasks and playthrough task.
     """
     assert task_id in ALL_TASKS_SPECS, f"Invalid task id provided {task_id}"
+    # COMPLETED copy to avoid modifying the original task specs using deepcopy
     task_specs = copy.deepcopy(ALL_TASKS_SPECS[task_id])
-
     # handle list of inventory items
     if "initial_inventory" in task_specs:
         # allow specify initial inventory in kwargs
