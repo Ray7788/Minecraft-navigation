@@ -200,14 +200,15 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--task', type=str, default='harvest_milk_with_crafting_table_and_iron_ingot')
+    parser.add_argument('--task', type=str, default='craft_torch_with_logs')
     parser.add_argument('--progressive-search', type=int, default=1) # set to 0 for zero-shot planning
     parser.add_argument('--shorter-episode', type=int, default=0) # ablation for using 1/2 episode steps?
     parser.add_argument('--no-find-skill', type=int, default=0) # ablation without find-skill?
     parser.add_argument('--test-episode', type=int, default=30) # number of test episodes
     parser.add_argument('--seed', type=int, default=7) # random seed for both np, torch and env
     parser.add_argument('--save-gif', type=int, default=1) # save whole gifs?
-    parser.add_argument('--save-path', type=str, default='test_hard_tasks_1')
+    # parser.add_argument('--save-path', type=str, default='test_hard_tasks_updated_MineCLIP')
+    parser.add_argument('--save-path', type=str, default='my_output')
     parser.add_argument('--clip-config-path', type=str, default='mineclip_official/config.yml')
     parser.add_argument('--clip-model-path', type=str, default='mineclip_official/attn.pth')
     parser.add_argument('--task-config-path', type=str, default='envs/hard_task_conf.yaml')
