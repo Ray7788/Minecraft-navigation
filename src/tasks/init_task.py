@@ -5,13 +5,13 @@ from typing import Union
 import importlib_resources
 from itertools import product
 from omegaconf import OmegaConf
-from .utils import ALL_VARS
+from utils import ALL_VARS
 
-from .meta.base import MetaTaskBase
-from .sim.inventory import InventoryItem
-from .sim.sim import MineDojoSim
-from .sim.wrappers import FastResetWrapper, ARNNWrapper
-from .meta import (
+from meta.base import MetaTaskBase
+from sim.inventory import InventoryItem
+from sim.sim import MineDojoSim
+from sim.wrappers import FastResetWrapper, ARNNWrapper
+from meta import (
     HarvestMeta,
     CombatMeta,
     TechTreeMeta,
@@ -21,10 +21,12 @@ from .meta import (
 )
 SUBGOAL_DISTANCE = 10
 
+# -with importlib.resources.path('mypackage', 'datafile.txt') as f:
+# +with importlib.resources.files('mypackage') / 'datafile.txt' as f:
 
 def _resource_file_path(file_name) -> str:
     """Retrieves the absolute file path of a specified resource file within the package."""
-    with importlib_resources.path("minedojo.tasks.description_files", file_name) as p:
+    with importlib_resources.files("minedojo.tasks.description_files") / 'file_name' as p:
         return str(p)
 
 
@@ -56,9 +58,7 @@ def _meta_task_make(meta_task: str, *args, **kwargs) -> Union[MetaTaskBase, Fast
     meta_task = meta_task.lower()
     assert meta_task in MetaTaskName2Class, f"Invalid meta task name provided {meta_task}"  # check existence
 
-    # 忽略open-ended
     if meta_task == "open-ended" and kwargs.get("fast_reset"):
-        # 删除相关的参数
         fast_reset = kwargs.pop("fast_reset")
         fast_reset_random_teleport_range = kwargs.pop(
             "fast_reset_random_teleport_range", None
@@ -69,7 +69,6 @@ def _meta_task_make(meta_task: str, *args, **kwargs) -> Union[MetaTaskBase, Fast
         fast_reset_random_teleport_range_low = kwargs.pop(
             "fast_reset_random_teleport_range_low", None
         )
-        # 上面前2个暂时不用，可省略
         if fast_reset is True:
             return FastResetWrapper(
                 MineDojoSim(*args, **kwargs), fast_reset_random_teleport_range_high, fast_reset_random_teleport_range_low

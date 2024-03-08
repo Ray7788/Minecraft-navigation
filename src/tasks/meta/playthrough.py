@@ -1,7 +1,7 @@
 from typing import Optional, Union, List, Dict, Tuple
 
 from .base import MetaTaskBase
-from ..sim.inventory import InventoryItem
+from sim.inventory import InventoryItem
 from .utils import simple_inventory_based_check, possess_item_reward
 
 
@@ -110,6 +110,10 @@ class Playthrough(MetaTaskBase):
         world_seed: Optional[str] = None,
         # ------ reset mode ------
         fast_reset: bool = True,
+        # (fast_reset_range --> ~_high & ~_low)
+        fast_reset_random_teleport_range: Optional[int] = None,
+        fast_reset_random_teleport_range_high: Optional[int] = None,
+        fast_reset_random_teleport_range_low: Optional[int] = None,
         # ------ obs ------
         image_size: Union[int, Tuple[int, int]],
         use_voxel: bool = False,
@@ -138,6 +142,9 @@ class Playthrough(MetaTaskBase):
 
         super().__init__(
             fast_reset=fast_reset,
+            fast_reset_random_teleport_range=fast_reset_random_teleport_range,
+            fast_reset_random_teleport_range_high=fast_reset_random_teleport_range_high,
+            fast_reset_random_teleport_range_low=fast_reset_random_teleport_range_low,
             success_criteria=success_criteria,
             reward_fns=reward_fns,
             seed=seed,

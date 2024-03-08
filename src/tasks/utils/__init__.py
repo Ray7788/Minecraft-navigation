@@ -1,1 +1,1 @@
-from all_vars import ALL_VARS
+from .all_vars import ALL_VARS

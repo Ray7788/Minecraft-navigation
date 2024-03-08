@@ -6,8 +6,8 @@ from typing import List, Dict, Any, Union, Tuple, Optional
 import gym
 import numpy as np
 
-from ...sim import MineDojoSim
-from ...sim.wrappers import FastResetWrapper
+from sim import MineDojoSim
+from sim.wrappers import FastResetWrapper
 from .utils import (
     check_success_base,
     reward_fn_base,
@@ -54,6 +54,9 @@ class MetaTaskBase(gym.Wrapper):
         *,
         fast_reset: bool = True,
         fast_reset_random_teleport_range: Optional[int] = None,
+        # (fast_reset_range --> ~_high & ~_low)
+        fast_reset_random_teleport_range_high: Optional[int] = None,
+        fast_reset_random_teleport_range_low: Optional[int] = None,
         success_criteria: List[check_success_base],
         reward_fns: List[reward_fn_base],
         **kwargs,
@@ -62,7 +65,7 @@ class MetaTaskBase(gym.Wrapper):
         self._fast_reset = fast_reset
         if fast_reset:
             sim = FastResetWrapper(
-                sim, random_teleport_range=fast_reset_random_teleport_range
+                sim, random_teleport_range=fast_reset_random_teleport_range,random_teleport_range_high=fast_reset_random_teleport_range_high,random_teleport_range_low=fast_reset_random_teleport_range_low
             )
         super().__init__(env=sim)
 
@@ -78,12 +81,17 @@ class MetaTaskBase(gym.Wrapper):
     def is_successful(self):
         return self._is_successful
 
-    def reset(self):
+    # move_flag: added augment for fast_reset and teleport Agent
+    def reset(self,move_flag=True):
         """Resets the environment to an initial state and returns an initial observation.
 
         Return:
             Agent’s initial observation.
         """
+        if self._fast_reset:
+            obs = self.env.reset(move_flag = move_flag)
+        else:
+            obs = self.env.reset()        
         obs = self.env.reset()
         info = self.env.prev_info
         obs, info = self._after_sim_reset_hook(obs, info)
@@ -239,8 +247,8 @@ class ExtraSpawnMetaTaskBase(MetaTaskBase):
         extra_spawn_range_low: Optional[Tuple[int, int, int]],
         extra_spawn_range_high: Optional[Tuple[int, int, int]],
         fast_reset: bool = True,
-        fast_reset_random_teleport_range: Optional[int] = None,
-        success_criteria: List[check_success_base],
+        fast_reset_random_teleport_range_low: Optional[int] = None,
+        fast_reset_random_teleport_range_high: Optional[int] = None,        success_criteria: List[check_success_base],
         reward_fns: List[reward_fn_base],
         **kwargs,
     ):
@@ -300,7 +308,8 @@ class ExtraSpawnMetaTaskBase(MetaTaskBase):
 
         super().__init__(
             fast_reset=fast_reset,
-            fast_reset_random_teleport_range=fast_reset_random_teleport_range,
+            fast_reset_random_teleport_range_high=fast_reset_random_teleport_range_high,
+            fast_reset_random_teleport_range_low=fast_reset_random_teleport_range_low,
             success_criteria=success_criteria,
             reward_fns=reward_fns,
             **kwargs,
