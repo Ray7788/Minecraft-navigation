@@ -4,10 +4,10 @@ from typing import Union, Sequence
 import gym
 import numpy as np
 
-from sim import MineDojoSim
+from ...sim import MineDojoSim
 from minerl.herobraine.hero import spaces as spaces
-from sim.mc_meta import mc as MC
-from sim.inventory import InventoryItem
+from ...mc_meta import mc as MC
+from ...inventory import InventoryItem
 
 
 class NNActionSpaceWrapper(gym.Wrapper):

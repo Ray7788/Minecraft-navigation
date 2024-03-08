@@ -1,4 +1,4 @@
-from actions import Action
+from ..action import Action
 from minerl.herobraine.hero.spaces import DiscreteRange, Dict
 
 

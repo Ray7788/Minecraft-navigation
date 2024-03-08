@@ -1,6 +1,6 @@
 import numpy as np
 
-from ...sim.mc_meta import mc as MC
+from ..mc_meta import mc as MC
 
 
 __all__ = ["get_recipes_matrix", "get_inventory_vector"]

@@ -8,7 +8,7 @@ import numpy as np
 from ..utils import *
 from ...sim import MineDojoSim
 from minerl.herobraine.hero import spaces as spaces
-from sim.mc_meta import mc as MC
+from ...mc_meta import mc as MC
 
 
 ALL_ITEMS = np.array(MC.ALL_ITEMS)
