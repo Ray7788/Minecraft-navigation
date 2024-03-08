@@ -26,7 +26,7 @@ SUBGOAL_DISTANCE = 10
 
 def _resource_file_path(file_name) -> str:
     """Retrieves the absolute file path of a specified resource file within the package."""
-    with importlib_resources.files("minedojo.tasks.description_files") / 'file_name' as p:
+    with importlib_resources.files("description_files") / file_name as p:
         return str(p)
 
 
