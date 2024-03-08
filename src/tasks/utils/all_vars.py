@@ -1,5 +1,5 @@
 # all possible variables used to fill specs
-_ALL_VARS = {
+ALL_VARS = {
     # Combat
     "combat_biomes": ["forest", "plains", "extreme_hills"],
     "regular_biomes_mob": [

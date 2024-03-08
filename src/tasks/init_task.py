@@ -5,7 +5,7 @@ from typing import Union
 import importlib_resources
 from itertools import product
 from omegaconf import OmegaConf
-from .utils.all_vars import _ALL_VARS
+from .utils import ALL_VARS
 
 from .meta.base import MetaTaskBase
 from .sim.inventory import InventoryItem
@@ -78,6 +78,12 @@ def _meta_task_make(meta_task: str, *args, **kwargs) -> Union[MetaTaskBase, Fast
     return MetaTaskName2Class[meta_task](*args, **kwargs)
 
 
+_ALL_TASKS_SPECS_UNFILLED = OmegaConf.load(
+    _resource_file_path("tasks_specs.yaml"))
+# check no duplicates
+assert len(set(_ALL_TASKS_SPECS_UNFILLED.keys())) == len(_ALL_TASKS_SPECS_UNFILLED)
+
+
 def product_dict(**kwargs):
     """
     Generate all possible combinations of key-value pairs from the input dictionary.
@@ -89,11 +95,6 @@ def product_dict(**kwargs):
     vals = kwargs.values()
     for instance in product(*vals):
         yield dict(zip(keys, instance))
-
-_ALL_TASKS_SPECS_UNFILLED = OmegaConf.load(
-    _resource_file_path("tasks_specs.yaml"))
-# check no duplicates
-assert len(set(_ALL_TASKS_SPECS_UNFILLED.keys())) == len(_ALL_TASKS_SPECS_UNFILLED)
 
 
 ALL_TASKS_SPECS = {}
@@ -115,7 +116,7 @@ for task_id, task_specs in _ALL_TASKS_SPECS_UNFILLED.items():
         # no unfilled vars, just make the task
         ALL_TASKS_SPECS[task_id] = task_specs
     else:
-        unfilled_vars_values = {var: _ALL_VARS[var] for var in unfilled_vars}
+        unfilled_vars_values = {var: ALL_VARS[var] for var in unfilled_vars}
         for var_dict in product_dict(**unfilled_vars_values):
             filled_task_id = task_id.format(**var_dict)
 
