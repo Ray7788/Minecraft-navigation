@@ -1,4 +1,4 @@
-from minerl.herobraine.hero.handlers.agent.actions import *
+from minerl.herobraine.hero.handlers.agent.actions import CraftAction
 
 class CraftWithTableAction(CraftAction):
     """

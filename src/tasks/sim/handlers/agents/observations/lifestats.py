@@ -2,7 +2,7 @@
 # Author: William H. Guss, Brandon Houghton
 import numpy as np
 
-import mc_meta.mc as mc
+from ....mc_meta import mc as mc
 from minerl.herobraine.hero import spaces
 from ...translation import (
     KeymapTranslationHandler,
