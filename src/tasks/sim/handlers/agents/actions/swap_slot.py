@@ -1,4 +1,4 @@
-from minedojo.sim.handlers.agent import Action
+from actions import Action
 from minerl.herobraine.hero.spaces import DiscreteRange, Dict
 
 

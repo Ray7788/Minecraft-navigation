@@ -9,7 +9,7 @@ When used to create a Gym environment, they should be passed to :code:`create_se
 """
 
 from typing import Union
-from minedojo.sim.mc_meta import mc
+from ...mc_meta import mc
 from minerl.herobraine.hero.handler import Handler
 
 class DefaultWorldGenerator(Handler):

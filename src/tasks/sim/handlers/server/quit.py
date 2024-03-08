@@ -6,7 +6,7 @@ When used to create a Gym environment, they should be passed to :code:`create_se
 # Author: William H. Guss, Brandon Houghton
 
 
-from minedojo.sim.handler import Handler
+from minerl.herobraine.hero.handler import Handler
 
 
 class ServerQuitFromTimeUp(Handler):
