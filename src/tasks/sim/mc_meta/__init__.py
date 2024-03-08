@@ -1,1 +1,1 @@
-from mc import *
+from .mc import *
