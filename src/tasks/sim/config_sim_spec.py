@@ -4,10 +4,10 @@ from typing import List, Optional
 import jinja2
 from lxml import etree
 
-from minerl.herobraine.hero import spaces as spaces
+from . import spacess as spaces
 from minerl.herobraine.hero.handler import Handler
 
-from minerl.herobraine.hero.handlers.translation import TranslationHandler
+from .handlers.translation import TranslationHandler
 
 MALMO_VERSION = "0.37.0"
 

@@ -2,7 +2,8 @@
 # Author: William H. Guss, Brandon Houghton
 import numpy as np
 
-import minerl.herobraine.hero.spaces as spaces
+from .... import spacess as spaces
+# import minedojo.sim.spaces as spaces
 from ..action import Action
 
 

@@ -3,7 +3,7 @@
 import numpy as np
 
 from ....mc_meta import mc as mc
-from minerl.herobraine.hero import spaces
+from .... import spacess as spaces
 from ...translation import (
     KeymapTranslationHandler,
     TranslationHandlerGroup,

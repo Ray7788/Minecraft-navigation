@@ -6,7 +6,7 @@ from collections.abc import Iterable
 
 import numpy as np
 
-from minerl.herobraine.hero import spaces
+from ... import spacess
 from minerl.herobraine.hero.handlers import util
 from ..translation import TranslationHandler
 
@@ -17,7 +17,7 @@ class Action(TranslationHandler):
     # Todo: support blacklisting commands. (note this has to work with merging somehow)
     """
 
-    def __init__(self, command: str, space: spaces.MineRLSpace):
+    def __init__(self, command: str, space: spacess.MineRLSpace):
         """
         Initializes the space of the handler with a gym.spaces.Dict
         of all of the spaces for each individual command.
@@ -92,7 +92,7 @@ class BaseItemListAction(Action):
         self._other = _other
         super().__init__(
             command,
-            spaces.Enum(*self._items, default=self._default),
+            spacess.Enum(*self._items, default=self._default),
         )
 
     def __or__(self, other):

@@ -4,7 +4,7 @@ import gym
 import numpy as np
 
 from ...sim import MineDojoSim
-from minerl.herobraine.hero import spaces as spaces
+from ... import spacess as spaces
 from ...mc_meta import mc as MC
 from ..utils import get_recipes_matrix, get_inventory_vector
 

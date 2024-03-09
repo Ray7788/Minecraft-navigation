@@ -33,9 +33,7 @@ from .handlers.agents.actions import KeybasedCommandAction
 from .handlers.agents.actions import SwapSlotAction
 # from .handlers.agents.actions import *
 
-from minerl.herobraine.hero import handlers
-from .handlers.agents.start import LowLevelInputsAgentStart
-# from . import handlers
+from . import handlers
 
 from minerl.herobraine.hero import mc
 from .bridge import BridgeEnv

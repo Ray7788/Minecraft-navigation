@@ -1,6 +1,6 @@
 import numpy as np
 
-from minerl.herobraine.hero import spaces
+from .... import spacess as spaces
 from ...translation import KeymapTranslationHandler
 
 

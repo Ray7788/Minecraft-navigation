@@ -1,6 +1,6 @@
 from typing import Dict, Any
 
-from minerl.herobraine.hero import spaces
+from .... import spacess as spaces
 from ....mc_meta.mc import ALL_ACHIEVEMENTS
 from ...translation import TranslationHandler
 

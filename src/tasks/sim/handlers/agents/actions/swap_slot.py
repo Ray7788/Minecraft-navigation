@@ -1,5 +1,5 @@
 from ..action import Action
-from minerl.herobraine.hero.spaces import DiscreteRange, Dict
+from ....spacess import DiscreteRange, Dict
 
 
 class SwapSlotAction(Action):

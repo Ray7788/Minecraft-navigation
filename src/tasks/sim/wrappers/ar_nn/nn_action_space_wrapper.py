@@ -5,7 +5,7 @@ import gym
 import numpy as np
 
 from ...sim import MineDojoSim
-from minerl.herobraine.hero import spaces as spaces
+from ... import spacess as spaces
 from ...mc_meta import mc as MC
 from ...inventory import InventoryItem
 

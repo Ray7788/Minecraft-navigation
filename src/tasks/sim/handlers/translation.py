@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 
 import numpy as np
 
-from minerl.herobraine.hero import spaces as spaces
+from .. import spacess as spacess
 from minerl.herobraine.hero.handler import Handler
 
 
@@ -16,7 +16,7 @@ class TranslationHandler(Handler):
     between universal action format, hero (malmo), and herobriane (ML stuff).
     """
 
-    def __init__(self, space: spaces.MineRLSpace, **other_kwargs):
+    def __init__(self, space: spacess.MineRLSpace, **other_kwargs):
         self.space = space
 
     def from_hero(self, x: Dict[str, Any]):
@@ -47,7 +47,7 @@ class KeymapTranslationHandler(TranslationHandler):
         self,
         hero_keys: List[str],
         univ_keys: List[str],
-        space: spaces.MineRLSpace,
+        space: spacess.MineRLSpace,
         default_if_missing=None,
         to_string: str = None,
         ignore_missing: bool = False,
@@ -110,7 +110,7 @@ class TranslationHandlerGroup(TranslationHandler):
     def __init__(self, handlers: List[TranslationHandler]):
         self.handlers = sorted(handlers, key=lambda x: x.to_string())
         super(TranslationHandlerGroup, self).__init__(
-            spaces.Dict([(h.to_string(), h.space) for h in self.handlers])
+            spacess.Dict([(h.to_string(), h.space) for h in self.handlers])
         )
 
     def to_hero(self, x: Dict[str, Any]) -> str:
