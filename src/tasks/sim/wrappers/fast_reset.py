@@ -46,7 +46,7 @@ class FastResetWrapper(gym.Wrapper):
                 "However, they will not take effects because `fast_reset = True`. "
                 "Consider using `fast_reset = False` instead."
             )
-
+        
         if random_teleport_range_high is None and random_teleport_range_low is None:
             self._move_flag = False
 
@@ -76,18 +76,18 @@ class FastResetWrapper(gym.Wrapper):
                 self._reset_cmds.append(
                     f'/replaceitem entity @p {map_slot_number_to_cmd_slot(slot)} minecraft:{item_dict["type"]} {item_dict["quantity"]} {item_dict["metadata"]}'
                 )
-        
+
         self.init_position = None
         if start_position is not None:
             self._reset_cmds.append(
                 f'/tp @p {start_position["x"]} {start_position["y"]} {start_position["z"]} {start_position["yaw"]} {start_position["pitch"]}'
             )
-        self.set_start_position=True
-        self.init_position = {"x":start_position['x'], "y":start_position['y'], "z":start_position['z']}
-
+            self.set_start_position=True
+            self.init_position = {"x":start_position['x'], "y":start_position['y'], "z":start_position['z']}
+            
         if clear_ground:
             # kill all creatures
-            self._reset_cmds.append("/kill @e[type=!player]")
+            self._reset_cmds.append("/kill @e[type=!player]")  
             self._reset_cmds.append("/kill @e[type=item]")
 
         self._server_start = False

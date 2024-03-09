@@ -25,6 +25,7 @@ class CMDExecutor:
         "clear",
         "setblock",
         "spreadplayers",
+        "execute",
     }
 
     def __init__(self, world, raise_error_on_invalid_cmds: bool = False):
