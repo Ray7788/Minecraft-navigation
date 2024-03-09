@@ -248,7 +248,8 @@ class ExtraSpawnMetaTaskBase(MetaTaskBase):
         extra_spawn_range_high: Optional[Tuple[int, int, int]],
         fast_reset: bool = True,
         fast_reset_random_teleport_range_low: Optional[int] = None,
-        fast_reset_random_teleport_range_high: Optional[int] = None,        success_criteria: List[check_success_base],
+        fast_reset_random_teleport_range_high: Optional[int] = None,        
+        success_criteria: List[check_success_base],
         reward_fns: List[reward_fn_base],
         **kwargs,
     ):
