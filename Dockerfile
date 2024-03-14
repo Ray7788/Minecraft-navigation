@@ -298,11 +298,45 @@ RUN pip3 install pyyaml && \
     pip3 install numpy==1.23.1 && \
     pip3 install torch==1.12.1 && \
     pip3 install torchvision==0.13.1 
+# MCEnv
+RUN pip3 install jinja2 \
+    && pip3 install gym==0.21.0 \
+    && pip3 install lxml \
+    && pip3 install coloredlogs \
+    && pip3 install xmltodict==0.12.0 \
+    && pip3 install Pyro4 \
+    && pip3 install psutil \
+    && pip3 install multiprocess \
+    && pip3 install pytest \
+    && pip3 install daemoniker \
+    && pip3 install tqdm \
+    && pip3 install requests \
+    && pip3 install mypy-extensions \
+    && pip3 install jsonlines \
+    && pip3 install praw \
+    && pip3 install wget \
+    && pip3 install importlib_resources==6.1.1 \
+    && pip3 install hydra-core \
+    && pip3 install Pillow
+# Plan4MC
+RUN pip3 install docopt==0.6.2 \
+    && pip3 install easydict==1.10 \
+    && pip3 install imageio==2.19.3 \
+    && pip3 install matplotlib==3.5.2 \
+    && pip3 install networkx==2.8.5 \
+    && pip3 install scikit-image==0.19.3 \
+    && pip3 install scipy==1.9.0 \
+    && pip3 install tensorboard==2.0.2 \
+    && pip3 install tokenizers==0.12.1 \
+    && pip3 install torchaudio==0.12.1 \
+    && pip3 install torchsummary==1.5.1 \
+    && pip3 install tqdm==4.64.0 \
+    && pip3 install transformers==4.21.1 \
+    && pip3 install x-transformers==0.27.1 \
+    && pip3 install xmltodict==0.12.0
 
-# Install MineRL with dataset(currentlty v0.4.4, v1.0.2(with VPT) is not working, lot of users have the same problem, see https://github.com/minerllabs/minerl)
-RUN pip3 install git+https://github.com/minerllabs/minerl@v0.4.4 && \
-    python3 -m minerl.data.download --environment "MineRLNavigate-v0" && \
-    python3 -m minerl.data.download --environment "MineRLNavigateDense-v0"
+# Install MineRL(currentlty v0.4.4, v1.0.2(with VPT) is not working, lot of users have the same problem, see https://github.com/minerllabs/minerl)
+RUN pip3 install git+https://github.com/minerllabs/minerl@v0.4.4
 
 # Create user with password ${PASSWD}
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -319,7 +353,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 COPY entrypoint.sh /etc/entrypoint.sh
 RUN chmod 755 /etc/entrypoint.sh
 
-EXPOSE 8080
+EXPOSE 8082
 
 USER user
 ENV USER=user
@@ -333,6 +367,7 @@ ENV VGL_WM 1
 
 ENTRYPOINT ["/etc/entrypoint.sh"]
 
-# docker build -t mc .
-# docker run --gpus all -it -d -p 8080:8080 -v "$(pwd)":/home/user mc:latest tail -f /dev/null
-# docker exec -it <running_container_id> /bin/bash
+# Build command: make sure to run the following command in the same directory as the Dockerfile
+# docker build -t mc2 .
+# docker run --gpus all -it -d -p 8082:8082 -v "$(pwd)":/home/MCagent mc:latest tail -f /dev/null
+# docker exec -u root -it <running_container_id> /bin/bash
